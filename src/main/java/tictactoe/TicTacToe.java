@@ -11,15 +11,15 @@ public class TicTacToe {
 
     static {
         for (int i = 0; i < grid.length; i++) {
-            TicTacToe.grid[i] = String.valueOf(i + 1);
+            grid[i] = String.valueOf(i + 1);
         }
     }
 
-    public static void main(String[] args) {
+    public TicTacToe(){
         gameLoop();
     }
 
-    private static void gameLoop() {
+    private void gameLoop() {
         Scanner input = new Scanner(System.in);
         int player;
         int computer;
@@ -49,11 +49,11 @@ public class TicTacToe {
         }
     }
 
-    private static boolean hasTiles(String tile) {
+    private boolean hasTiles(String tile) {
         return tile.equals("X") || tile.equals("O");
     }
 
-    private static void gridView() {
+    private void gridView() {
         System.out.println(grid[0] + "|" + grid[1] + "|" + grid[2]);
         System.out.println("-----");
         System.out.println(grid[3] + "|" + grid[4] + "|" + grid[5]);
@@ -61,9 +61,8 @@ public class TicTacToe {
         System.out.println(grid[6] + "|" + grid[7] + "|" + grid[8]);
     }
 
-    private static void winner() {
-        if(isWinner(PLAYER_CHARACTER)
-        ){
+    private void winner() {
+        if(isWinner(PLAYER_CHARACTER)){
             System.out.println("Player Won\nGame Over");
             System.exit(200);
         }else if(isWinner(COMPUTER_CHARACTER)){
@@ -72,24 +71,24 @@ public class TicTacToe {
         }
     }
 
-    private static boolean isWinner(String userCharacter) {
+    private boolean isWinner(String userCharacter) {
         return hasWonHorizontally(userCharacter)
                 || hasWonVertically(userCharacter)
                 || hasWonDiagonally(userCharacter);
     }
 
-    private static boolean hasWonDiagonally(String userCharacter) {
+    private boolean hasWonDiagonally(String userCharacter) {
         return grid[0].equals(userCharacter) && grid[4].equals(userCharacter) && grid[8].equals(userCharacter)
                 || grid[2].equals(userCharacter) && grid[4].equals(userCharacter) && grid[6].equals(userCharacter);
     }
 
-    private static boolean hasWonVertically(String userCharacter) {
+    private boolean hasWonVertically(String userCharacter) {
         return grid[0].equals(userCharacter) && grid[3].equals(userCharacter) && grid[6].equals(userCharacter)
                 || grid[1].equals(userCharacter) && grid[4].equals(userCharacter) && grid[7].equals(userCharacter)
                 || grid[2].equals(userCharacter) && grid[5].equals(userCharacter) && grid[8].equals(userCharacter);
     }
 
-    private static boolean hasWonHorizontally(String userCharacter) {
+    private boolean hasWonHorizontally(String userCharacter) {
         return grid[0].equals(userCharacter) && grid[1].equals(userCharacter) && grid[2].equals(userCharacter)
                 || grid[3].equals(userCharacter) && grid[4].equals(userCharacter) && grid[5].equals(userCharacter)
                 || grid[6].equals(userCharacter) && grid[7].equals(userCharacter) && grid[8].equals(userCharacter);
