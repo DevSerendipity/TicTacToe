@@ -22,12 +22,12 @@ enum Player {
 
 public class TicTacToe {
 
-    private final Player[] grid = new Player[ROWS * COLS];
+    private final Player[][] grid = new Player[ROWS][COLS];
     private final Scanner input = new Scanner(System.in);
     private static final int COLS = 3;
     private static final int ROWS = 3;
 
-    public TicTacToe() {
+    public TicTacToe(){
         displayGrid();
     }
 
@@ -36,13 +36,22 @@ public class TicTacToe {
     }
 
     private void gameLoop() {
-        while (hasWinner()) {
+        while (true) {
             runHumansTurn();
             if (isDraw()) {
+                displayGrid();
                 System.out.println("DRAW");
                 return;
             }
+            if(hasWinner()){
+                displayGrid();
+                break;
+            }
             runComputerTurn();
+            if(hasWinner()){
+                displayGrid();
+                break;
+            }
             displayGrid();
         }
         getWinner();
@@ -50,39 +59,48 @@ public class TicTacToe {
 
     private boolean hasWinner() {
         if (isWinner(Player.HUMAN)) {
-            return false;
-        } else return !isWinner(Player.COMPUTER);
+            return true;
+        } else return isWinner(Player.COMPUTER);
     }
 
     private void runHumansTurn() {
         System.out.println("Pick a number from 1 - 9 ");
-        int humanSelectedIndex = input.nextInt();
-        while (isTileTaken(grid[humanSelectedIndex - 1])) {
+        int humanSelectedPosition = input.nextInt();
+        while (isTileTaken(grid[(humanSelectedPosition - 1 )/3][(humanSelectedPosition - 1) % 3])) {
             System.out.println("Try again that tile is taken");
-            humanSelectedIndex = input.nextInt();
+            humanSelectedPosition = input.nextInt();
         }
-        grid[humanSelectedIndex - 1] = Player.HUMAN;
+        grid[(humanSelectedPosition - 1 )/3][(humanSelectedPosition - 1) % 3] = Player.HUMAN;
     }
 
     private boolean isDraw() {
-        return Arrays.stream(grid).distinct().count() == 2 && !hasWinner();
+        for (Player[] players : grid) {
+            for (int i = 0; i < grid.length; i++) {
+                if (players[i] == null || players[i].getSymbol().equals(" ")) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void runComputerTurn() {
-        int computerSelectedIndex = (int) (Math.random() * 9 + 1);
-        while (isTileTaken(grid[computerSelectedIndex - 1])) {
-            computerSelectedIndex = (int) (Math.random() * 9 + 1);
+        int computerSelectedPosition = (int) (Math.random() * 9 + 1);
+        while (isTileTaken(grid[(computerSelectedPosition - 1 )/3][(computerSelectedPosition - 1) % 3])) {
+            computerSelectedPosition = (int) (Math.random() * 9 + 1);
         }
-        grid[computerSelectedIndex - 1] = Player.COMPUTER;
+        grid[(computerSelectedPosition - 1 )/3][(computerSelectedPosition - 1) % 3] = Player.COMPUTER;
     }
 
     private void displayGrid() {
-        for (int i = 0; i < grid.length; i++) {
-            String symbolText = grid[i] == null ? " " : grid[i].getSymbol();
+        for (Player[] players : grid) {
+            for (int col = 0; col < grid.length; col++) {
+                String symbolText = players[col] == null ? " " : players[col].getSymbol();
 
-            String delimiter = isLastRowIndex(i) ? "\n" : "|";
+                String delimiter = isLastRowIndex(col % COLS) ? "\n" : "|";
 
-            System.out.print(symbolText + delimiter);
+                System.out.print(symbolText + delimiter);
+            }
         }
     }
 
@@ -98,8 +116,8 @@ public class TicTacToe {
         return playerTile != null;
     }
 
-    private boolean isLastRowIndex(int index) {
-        return index == 2 || index == 5 || index == 8;
+    private boolean isLastRowIndex(int col) {
+        return col == 2;
     }
 
     private boolean isWinner(Player userCharacter) {
@@ -114,7 +132,7 @@ public class TicTacToe {
 
     private boolean rightToLeftDiagonalWin(Player userCharacter) {
         for (int rows = 0; rows < ROWS; rows++) {
-            Player tile = grid[translateIndex(COLS - rows -1, rows)];
+            Player tile = grid[COLS - rows -1] [rows];
             if (tile != userCharacter) {
                 return false;
             }
@@ -124,7 +142,7 @@ public class TicTacToe {
 
     private boolean leftToRightDiagonalWin(Player userCharacter) {
         for (int i = 0; i < ROWS; i++) {
-            Player tile = grid[translateIndex(i, i)];
+            Player tile = grid[i][i];
             if (tile != userCharacter) {
                 return false;
             }
@@ -136,8 +154,8 @@ public class TicTacToe {
         for (int col = 0; col < COLS; col++) {
             boolean isColWon = true;
             for (int row = 0; row < ROWS; row++) {
-                int tileIndex = translateIndex(row, col);
-                if (grid[tileIndex] != userCharacter) {
+                Player tileIndex = grid[row] [col];
+                if (tileIndex != userCharacter) {
                     isColWon = false;
                     break;
                 }
@@ -154,8 +172,8 @@ public class TicTacToe {
         for (int row = 0; row < ROWS; row++) {
             boolean isRowWon = true;
             for (int col = 0; col < COLS; col++) {
-                int tileIndex = translateIndex(row, col);
-                if (grid[tileIndex] != userCharacter) {
+                Player tileIndex = grid[row][col];
+                if (tileIndex != userCharacter) {
                     isRowWon = false;
                     break;
                 }
@@ -165,9 +183,5 @@ public class TicTacToe {
             }
         }
         return false;
-    }
-
-    private int translateIndex(int row, int col) {
-        return row * COLS + col;
     }
 }
