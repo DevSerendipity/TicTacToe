@@ -1,8 +1,9 @@
 package tictactoe;
 
-import java.util.*;
+import java.util.Scanner;
 
-// TODO Naming conventions | Work on naming not to name them regarding the topic that they cover, name them regarding what the player can expect them to do
+// TODO Naming conventions | Work on naming not to name them regarding the topic that they cover, name them regarding
+//  what the player can expect them to do
 enum Cell {
     HUMAN("X"),
     COMPUTER("O");
@@ -19,7 +20,9 @@ enum Cell {
 }
 
 enum State {
-    WINNER_HUMAN, WINNER_COMPUTER, TIE
+    HUMAN_WINNER,
+    COMPUTER_WINNER,
+    TIE
 }
 
 public class TicTacToe extends Winner {
@@ -31,21 +34,21 @@ public class TicTacToe extends Winner {
     }
 
     public void start() {
-        gameLoop();
+        game();
     }
 
-    private void gameLoop() {
-        while (true) {
+    private void game() {
+        while( true ) {
             runHumansTurn();
-            if (isDraw()) {
+            if ( isDraw() ) {
                 System.out.println(State.TIE);
                 return;
             }
-            if (hasWinner()) {
+            if ( hasWinner() ) {
                 break;
             }
             runComputerTurn();
-            if (hasWinner()) {
+            if ( hasWinner() ) {
                 break;
             }
             displayGrid();
@@ -55,9 +58,9 @@ public class TicTacToe extends Winner {
     }
 
     private boolean isDraw() {
-        for (Cell[] players : getGrid()) {
-            for (int i = 0; i < getGrid().length; i++) {
-                if (players[i] == null || players[i].getSymbol().equals(" ") || isWinner(Cell.HUMAN)) {
+        for ( Cell[] players: getGrid() ) {
+            for ( int i = 0; i < getGrid().length; i++ ) {
+                if ( players[i] == null || players[i].getSymbol().equals(" ") || isWinner(Cell.HUMAN) ) {
                     return false;
                 }
             }
@@ -68,7 +71,7 @@ public class TicTacToe extends Winner {
     private void runHumansTurn() {
         System.out.println("Pick a number from 1 - 9 ");
         int humanSelectedPosition = input.nextInt();
-        while (isCellTaken(getCellPositioning(humanSelectedPosition)) || isRightInput(humanSelectedPosition)) {
+        while( isCellTaken(getCellPositioning(humanSelectedPosition)) || isRightInput(humanSelectedPosition) ) {
             System.out.println("Try again ");
             humanSelectedPosition = input.nextInt();
         }
@@ -84,8 +87,8 @@ public class TicTacToe extends Winner {
     }
 
     private void displayGrid() {
-        for (Cell[] players : getGrid()) {
-            for (int index = 0; index < getGrid().length; index++) {
+        for ( Cell[] players: getGrid() ) {
+            for ( int index = 0; index < getGrid().length; index++ ) {
                 String symbolText = players[index] == null ? " " : players[index].getSymbol();
 
                 String delimiter = isLastRowIndex(index % getCols()) ? "\n" : "|";
@@ -97,7 +100,7 @@ public class TicTacToe extends Winner {
 
     private void runComputerTurn() {
         int computerSelectedPosition = (int) (Math.random() * 9 + 1);
-        while (isCellTaken(getCellPositioning(computerSelectedPosition))) {
+        while( isCellTaken(getCellPositioning(computerSelectedPosition)) ) {
             computerSelectedPosition = (int) (Math.random() * 9 + 1);
         }
         getGrid()[(computerSelectedPosition - 1) / 3][(computerSelectedPosition - 1) % 3] = Cell.COMPUTER;
