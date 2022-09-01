@@ -40,7 +40,7 @@ public class TicTacToe extends Winner {
     private void game() {
         while( true ) {
             runHumansTurn();
-            if ( isDraw() ) {
+            if ( isGameDraw() ) {
                 System.out.println(State.TIE);
                 return;
             }
@@ -57,7 +57,7 @@ public class TicTacToe extends Winner {
         getWinner();
     }
 
-    private boolean isDraw() {
+    private boolean isGameDraw() {
         for ( Cell[] players: getGrid() ) {
             for ( int i = 0; i < getGrid().length; i++ ) {
                 if ( players[i] == null || players[i].getSymbol().equals(" ") || isWinner(Cell.HUMAN) ) {
